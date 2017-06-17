@@ -17,18 +17,22 @@
  *
  */
 
-package co.paulozan.slackbot;
+package co.paulozan.slackbot.contract;
 
-import co.paulozan.slackbot.contract.SlackBot;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by pzanco on 17/06/17.
  */
-public class App {
+@RestController
+@EnableAutoConfiguration
+public class SlackBot {
 
-  public static void main(String[] args) {
-    SpringApplication.run(SlackBot.class);
+  @RequestMapping("/")
+  String home(){
+      return "Hello World!";
   }
 
 }
