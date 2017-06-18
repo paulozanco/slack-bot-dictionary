@@ -9,7 +9,7 @@
         <module name="slack-bot-dictionary" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="slack-bot-dictionary" target="1.6" />
     </bytecodeTargetLevel>
   </component>
