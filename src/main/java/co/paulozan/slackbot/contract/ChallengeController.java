@@ -19,15 +19,15 @@
 
 package co.paulozan.slackbot.contract;
 
-import co.paulozan.slack.domain.ChallengeResponse;
-import co.paulozan.slack.event.Challenge;
+import co.paulozan.slack.domain.EventResponse;
+import co.paulozan.slack.event.Event;
+import io.swagger.annotations.ApiModel;
+import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -35,20 +35,27 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@ApiModel()
 public class ChallengeController {
 
   private final Logger logger = LoggerFactory.getLogger(ChallengeController.class);
 
-  @RequestMapping(value = "/challenge",
-      method = RequestMethod.POST,
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  @ResponseBody
-  public ChallengeResponse challenge(@RequestBody Challenge challenge) {
-    logger.debug("Received {}", challenge);
-    ChallengeResponse challengeResponse = new ChallengeResponse(challenge.getChallenge());
-    return challengeResponse;
+  @RequestMapping(
+      value = "/event",
+      method = RequestMethod.POST)
+  public EventResponse event(@RequestBody Event event) {
+    logger.debug("Received {}", event);
+    EventResponse eventResponse = new EventResponse();
+    if (event.getType().equals("url_verification")) {
+      eventResponse.setChallenge(event.getChallenge());
+    }
+    return eventResponse;
   }
 
+  @RequestMapping(
+      value = "/callback",
+      method = RequestMethod.GET)
+  public void challenge(@QueryParam("code") String code, @QueryParam("state") String state) {
+    logger.debug("OAuth Code {}", code);
+  }
 }
