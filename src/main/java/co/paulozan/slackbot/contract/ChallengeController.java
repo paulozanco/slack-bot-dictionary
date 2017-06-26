@@ -19,6 +19,7 @@
 
 package co.paulozan.slackbot.contract;
 
+import co.paulozan.slack.client.ChatClient;
 import co.paulozan.slack.domain.EventResponse;
 import co.paulozan.slack.event.Event;
 import io.swagger.annotations.ApiModel;
@@ -43,14 +44,20 @@ public class ChallengeController {
   @RequestMapping(
       value = "/event",
       method = RequestMethod.POST)
-  public EventResponse event(@RequestBody Event event) {
+  public EventResponse event(@RequestBody Event event) throws Exception{
     logger.debug("Received {}", event);
     EventResponse eventResponse = new EventResponse();
-    if (event.getType().equals("url_verification")) {
+    if (event!= null && event.getType().equals("url_verification")) {
       eventResponse.setChallenge(event.getChallenge());
+    } else if (event != null && event.getType() != null && event.getEvent().getType().equals("message")) {
+      String token = System.getenv("SLACK_TOKEN");
+      String channel = event.getChannel();
+      String text = event.getText();
+      ChatClient.postMessage(token, channel, text);
     }
     return eventResponse;
   }
+
 
   @RequestMapping(
       value = "/callback",
