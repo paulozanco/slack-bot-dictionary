@@ -22,6 +22,7 @@ package co.paulozan.slackbot.contract;
 import co.paulozan.slack.client.ChatClient;
 import co.paulozan.slack.domain.EventResponse;
 import co.paulozan.slack.event.Event;
+import co.paulozan.slack.parser.JsonParser;
 import io.swagger.annotations.ApiModel;
 import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
@@ -49,11 +50,17 @@ public class ChallengeController {
     EventResponse eventResponse = new EventResponse();
     if (event!= null && event.getType().equals("url_verification")) {
       eventResponse.setChallenge(event.getChallenge());
-    } else if (event != null && event.getType() != null && event.getEvent().getType().equals("message")) {
+    } else if (event != null
+        && event.getEvent() != null
+        && event.getEvent().getType().equals("message")
+        && event.getEvent().getUser() != null) {
       String token = System.getenv("SLACK_TOKEN");
-      String channel = event.getChannel();
-      String text = event.getText();
+      String channel = event.getEvent().getChannel();
+      String text = event.getEvent().getText();
+
+      logger.debug("Send message - {}", token, " ",channel, " ",  text);
       ChatClient.postMessage(token, channel, text);
+      logger.debug("Message sent");
     }
     return eventResponse;
   }
