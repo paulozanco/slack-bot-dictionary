@@ -19,6 +19,7 @@
 
 package co.paulozan.slackbot.worker;
 
+import co.paulozan.rest.WebsterImpl;
 import co.paulozan.slack.client.ChatClient;
 import co.paulozan.slack.domain.Event;
 import co.paulozan.slack.event.EventResponse;
@@ -33,12 +34,16 @@ public class EventMessageWorker implements EventWorker {
   public EventResponse process(Event event) throws Exception {
 
     String token = System.getenv("SLACK_TOKEN");
+    String webster_key = System.getenv("WEBSTER_KEY");
     String channel = event.getEvent().getChannel();
     String text = event.getEvent().getText();
 
-    ChatClient.postMessage(token, channel, text);
+    WebsterImpl webster = new WebsterImpl();
+    String definition = webster.definition(text, webster_key);
 
-    LOGGER.debug("Message sent - {} - {}", channel, " ", text);
+    ChatClient.postMessage(token, channel, definition);
+
+    LOGGER.debug("Message sent - {} - {}", channel, " ", definition);
 
     return new EventResponse();
   }
