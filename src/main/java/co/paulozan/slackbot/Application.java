@@ -22,10 +22,7 @@ package co.paulozan.slackbot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Created by pzanco on 17/06/17.
- */
-
+@SuppressWarnings("ALL")
 @SpringBootApplication
 public class Application {
 

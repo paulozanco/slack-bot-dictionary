@@ -19,10 +19,10 @@
 
 package co.paulozan.slackbot.contract;
 
-import co.paulozan.slack.client.ChatClient;
-import co.paulozan.slack.domain.EventResponse;
-import co.paulozan.slack.event.Event;
-import co.paulozan.slack.parser.JsonParser;
+import co.paulozan.slack.domain.Event;
+import co.paulozan.slack.event.EventResponse;
+import co.paulozan.slackbot.worker.EventWorker;
+import co.paulozan.slackbot.worker.EventWorkerFactory;
 import io.swagger.annotations.ApiModel;
 import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
@@ -32,44 +32,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by pzanco on 17/06/17.
- */
-
+@SuppressWarnings("DefaultFileTemplate")
 @RestController
 @ApiModel()
-public class ChallengeController {
+public class EventController {
 
-  private final Logger logger = LoggerFactory.getLogger(ChallengeController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
   @RequestMapping(
       value = "/event",
       method = RequestMethod.POST)
-  public EventResponse event(@RequestBody Event event) throws Exception{
-    logger.debug("Received {}", event);
-    EventResponse eventResponse = new EventResponse();
-    if (event!= null && event.getType().equals("url_verification")) {
-      eventResponse.setChallenge(event.getChallenge());
-    } else if (event != null
-        && event.getEvent() != null
-        && event.getEvent().getType().equals("message")
-        && event.getEvent().getUser() != null) {
-      String token = System.getenv("SLACK_TOKEN");
-      String channel = event.getEvent().getChannel();
-      String text = event.getEvent().getText();
-
-      logger.debug("Send message - {}", token, " ",channel, " ",  text);
-      ChatClient.postMessage(token, channel, text);
-      logger.debug("Message sent");
-    }
-    return eventResponse;
+  public EventResponse event(@RequestBody Event event) throws Exception {
+    LOGGER.debug("Received {}", event);
+    EventWorker worker = EventWorkerFactory.instance(event);
+    return worker.process(event);
   }
-
 
   @RequestMapping(
       value = "/callback",
       method = RequestMethod.GET)
   public void challenge(@QueryParam("code") String code, @QueryParam("state") String state) {
-    logger.debug("OAuth Code {}", code);
+    LOGGER.debug("OAuth Code {}", code);
   }
 }

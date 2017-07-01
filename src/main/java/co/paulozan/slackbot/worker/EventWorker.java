@@ -17,38 +17,13 @@
  *
  */
 
-package co.paulozan.slackbot;
+package co.paulozan.slackbot.worker;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import co.paulozan.slack.domain.Event;
+import co.paulozan.slack.event.EventResponse;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest
-    extends TestCase {
+public interface EventWorker {
 
-  /**
-   * Create the test case
-   *
-   * @param testName name of the test case
-   */
-  public AppTest(String testName) {
-    super(testName);
-  }
+  EventResponse process(Event event) throws Exception;
 
-  /**
-   * @return the suite of tests being tested
-   */
-  public static Test suite() {
-    return new TestSuite(AppTest.class);
-  }
-
-  /**
-   * Rigourous Test :-)
-   */
-  public void testApp() {
-    assertTrue(true);
-  }
 }

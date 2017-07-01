@@ -17,38 +17,22 @@
  *
  */
 
-package co.paulozan.slackbot;
+package co.paulozan.slackbot.worker;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import co.paulozan.slack.domain.Event;
+import co.paulozan.slack.event.EventResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest
-    extends TestCase {
+public class EventChallengeWorker implements EventWorker {
 
-  /**
-   * Create the test case
-   *
-   * @param testName name of the test case
-   */
-  public AppTest(String testName) {
-    super(testName);
+  private static final Logger LOGGER = LoggerFactory.getLogger(EventChallengeWorker.class);
+
+  @Override
+  public EventResponse process(Event event) throws Exception {
+    EventResponse eventResponse = new EventResponse();
+    eventResponse.setChallenge(event.getChallenge());
+    return eventResponse;
   }
 
-  /**
-   * @return the suite of tests being tested
-   */
-  public static Test suite() {
-    return new TestSuite(AppTest.class);
-  }
-
-  /**
-   * Rigourous Test :-)
-   */
-  public void testApp() {
-    assertTrue(true);
-  }
 }

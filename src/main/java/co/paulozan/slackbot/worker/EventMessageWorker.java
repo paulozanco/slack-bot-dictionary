@@ -17,38 +17,29 @@
  *
  */
 
-package co.paulozan.slackbot;
+package co.paulozan.slackbot.worker;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import co.paulozan.slack.client.ChatClient;
+import co.paulozan.slack.domain.Event;
+import co.paulozan.slack.event.EventResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest
-    extends TestCase {
+public class EventMessageWorker implements EventWorker {
 
-  /**
-   * Create the test case
-   *
-   * @param testName name of the test case
-   */
-  public AppTest(String testName) {
-    super(testName);
-  }
+  private static final Logger LOGGER = LoggerFactory.getLogger(EventMessageWorker.class);
 
-  /**
-   * @return the suite of tests being tested
-   */
-  public static Test suite() {
-    return new TestSuite(AppTest.class);
-  }
+  @Override
+  public EventResponse process(Event event) throws Exception {
 
-  /**
-   * Rigourous Test :-)
-   */
-  public void testApp() {
-    assertTrue(true);
+    String token = System.getenv("SLACK_TOKEN");
+    String channel = event.getEvent().getChannel();
+    String text = event.getEvent().getText();
+
+    ChatClient.postMessage(token, channel, text);
+
+    LOGGER.debug("Message sent - {} - {}", channel, " ", text);
+
+    return new EventResponse();
   }
 }

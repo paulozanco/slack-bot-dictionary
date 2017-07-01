@@ -20,6 +20,6 @@
 
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
-  <logger name="co.paulozan" level="DEBUG"/>
+  <logger level="DEBUG" name="co.paulozan"/>
   <root level="info"/>
 </configuration>
