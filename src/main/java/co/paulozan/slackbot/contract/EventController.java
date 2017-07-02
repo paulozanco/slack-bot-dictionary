@@ -47,9 +47,10 @@ public class EventController {
   @RequestMapping(
       value = "/event",
       method = RequestMethod.POST)
-  public void event(@RequestBody Event event) throws Exception {
+  public EventResponse event(@RequestBody Event event) throws Exception {
     LOGGER.debug("Received {}", JsonParser.toJson(event));
-    Application.EVENT_BUS.post(event);
+    EventWorker worker = EventWorkerFactory.instance(event);
+    return worker.process(event);
   }
 
   @RequestMapping(

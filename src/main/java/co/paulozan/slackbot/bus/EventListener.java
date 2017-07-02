@@ -19,10 +19,9 @@
 
 package co.paulozan.slackbot.bus;
 
+import co.paulozan.rest.WebsterImpl;
+import co.paulozan.slack.client.ChatClient;
 import co.paulozan.slack.domain.Event;
-import co.paulozan.slack.event.EventResponse;
-import co.paulozan.slackbot.worker.EventWorker;
-import co.paulozan.slackbot.worker.EventWorkerFactory;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +33,17 @@ public class EventListener {
   @Subscribe
   public void event(Event event) {
     try {
-      EventWorker worker = EventWorkerFactory.instance(event);
-      EventResponse eventResponse = worker.process(event);
+      String token = System.getenv("SLACK_TOKEN");
+      String webster_key = System.getenv("WEBSTER_KEY");
+      String channel = event.getEvent().getChannel();
+      String text = event.getEvent().getText();
+
+      WebsterImpl webster = new WebsterImpl();
+      String definition = webster.definition(text, webster_key);
+
+      ChatClient.postMessage(token, channel, definition);
+
+      LOGGER.debug("Message sent - {} - {}", channel, " ", definition);
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
     }

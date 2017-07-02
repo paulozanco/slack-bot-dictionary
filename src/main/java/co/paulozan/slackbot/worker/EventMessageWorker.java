@@ -23,6 +23,7 @@ import co.paulozan.rest.WebsterImpl;
 import co.paulozan.slack.client.ChatClient;
 import co.paulozan.slack.domain.Event;
 import co.paulozan.slack.event.EventResponse;
+import co.paulozan.slackbot.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,19 +33,7 @@ public class EventMessageWorker implements EventWorker {
 
   @Override
   public EventResponse process(Event event) throws Exception {
-
-    String token = System.getenv("SLACK_TOKEN");
-    String webster_key = System.getenv("WEBSTER_KEY");
-    String channel = event.getEvent().getChannel();
-    String text = event.getEvent().getText();
-
-    WebsterImpl webster = new WebsterImpl();
-    String definition = webster.definition(text, webster_key);
-
-    ChatClient.postMessage(token, channel, definition);
-
-    LOGGER.debug("Message sent - {} - {}", channel, " ", definition);
-
+    Application.EVENT_BUS.post(event);
     return new EventResponse();
   }
 }

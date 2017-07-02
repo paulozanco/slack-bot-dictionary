@@ -30,12 +30,8 @@ public class EventUnknownWorker implements EventWorker {
 
   @Override
   public EventResponse process(Event event) throws Exception {
-
-    LOGGER.warn("EVENT UNKNOWN ");
-    LOGGER.warn(event.toString());
-
-    EventResponse eventResponse = new EventResponse();
-    return eventResponse;
+    LOGGER.info("EVENT WILL BE DISCARDED ");
+    return new EventResponse();
   }
 
 }

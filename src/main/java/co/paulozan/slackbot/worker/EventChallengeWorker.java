@@ -30,6 +30,7 @@ public class EventChallengeWorker implements EventWorker {
 
   @Override
   public EventResponse process(Event event) throws Exception {
+    LOGGER.info("CHALLENGE RECEIVED");
     EventResponse eventResponse = new EventResponse();
     eventResponse.setChallenge(event.getChallenge());
     return eventResponse;
