@@ -1,0 +1,18 @@
+{
+  "token": "wLIBikQi8PxQMlDu8JUB4ddl",
+  "event": {
+    "type": "message",
+    "channel": "D5Z5NM7GS",
+    "user": "U5SMF2EKZ",
+    "text": "usually",
+    "ts": "1499001747.766121"
+  },
+  "type": "event_callback",
+  "team_id": "T5RU2GTU4",
+  "api_app_id": "A5SMF822K",
+  "authed_users": [
+    "U5Z8KPSQM"
+  ],
+  "event_id": "Ev62591XQQ",
+  "event_time": "1499001747"
+}

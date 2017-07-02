@@ -21,15 +21,20 @@ package co.paulozan.slackbot.contract;
 
 import co.paulozan.slack.domain.Event;
 import co.paulozan.slack.event.EventResponse;
+import co.paulozan.slack.parser.JsonParser;
+import co.paulozan.slackbot.Application;
 import co.paulozan.slackbot.worker.EventWorker;
 import co.paulozan.slackbot.worker.EventWorkerFactory;
+import feign.Response;
 import io.swagger.annotations.ApiModel;
 import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @SuppressWarnings("DefaultFileTemplate")
@@ -42,10 +47,9 @@ public class EventController {
   @RequestMapping(
       value = "/event",
       method = RequestMethod.POST)
-  public EventResponse event(@RequestBody Event event) throws Exception {
-    LOGGER.debug("Received {}", event);
-    EventWorker worker = EventWorkerFactory.instance(event);
-    return worker.process(event);
+  public void event(@RequestBody Event event) throws Exception {
+    LOGGER.debug("Received {}", JsonParser.toJson(event));
+    Application.EVENT_BUS.post(event);
   }
 
   @RequestMapping(

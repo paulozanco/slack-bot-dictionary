@@ -17,25 +17,28 @@
  *
  */
 
-package co.paulozan.slackbot;
+package co.paulozan.slackbot.bus;
 
-import co.paulozan.slackbot.bus.EventListener;
-import com.google.common.eventbus.EventBus;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import co.paulozan.slack.domain.Event;
+import co.paulozan.slack.event.EventResponse;
+import co.paulozan.slackbot.worker.EventWorker;
+import co.paulozan.slackbot.worker.EventWorkerFactory;
+import com.google.common.eventbus.Subscribe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("ALL")
-@SpringBootApplication
-public class Application {
+public class EventListener {
 
-  public static EventBus EVENT_BUS = new EventBus();
+  private static final Logger LOGGER = LoggerFactory.getLogger(EventListener.class);
 
-  public static void main(String[] args) {
-
-    EventListener listener = new EventListener();
-    EVENT_BUS.register(listener);
-
-    SpringApplication.run(Application.class, args);
+  @Subscribe
+  public void event(Event event) {
+    try {
+      EventWorker worker = EventWorkerFactory.instance(event);
+      EventResponse eventResponse = worker.process(event);
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage());
+    }
   }
 
 }
