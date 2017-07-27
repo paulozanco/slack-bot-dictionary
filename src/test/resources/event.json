@@ -1,0 +1,18 @@
+{
+  "token": "xxxxxxxxxx",
+  "event": {
+    "type": "message",
+    "channel": "xxxxx",
+    "user": "xxxxxxx",
+    "text": "usually",
+    "ts": "1499001747.766121"
+  },
+  "type": "event_callback",
+  "team_id": "xxxxxx",
+  "api_app_id": "xxxxx",
+  "authed_users": [
+    "xxxxxxx"
+  ],
+  "event_id": "xxxxx",
+  "event_time": "xxxxxx"
+}
